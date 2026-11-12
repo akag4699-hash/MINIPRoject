@@ -1,0 +1,540 @@
+/* ==============================================================================
+   AI-POWERED CRIMINAL NETWORK ANALYSIS SYSTEM - SIH 2026
+   Officer Login Portal Stylesheet
+   ============================================================================== */
+
+:root {
+  --navy-darkest: #030a1c;
+  --navy-dark: #071536;
+  --navy-card: #0b1e4a;
+  --navy-border: #1e3a75;
+  --royal-blue: #0284c7;
+  --cyan-accent: #38bdf8;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--navy-darkest);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+  padding: 24px 16px;
+}
+
+/* Background Canvas */
+.network-bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Top Government Header */
+.gov-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(7, 21, 54, 0.85);
+  border: 1px solid var(--navy-border);
+  backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.emblem-container {
+  width: 48px;
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.national-emblem {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+}
+
+.gov-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.gov-sub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fbbf24;
+}
+
+.gov-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+.gov-security {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: var(--cyan-accent);
+}
+
+/* Main Card */
+.login-card {
+  background: rgba(11, 30, 74, 0.9);
+  border: 1px solid var(--navy-border);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 28px 28px 20px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-badge {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 12px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.3) 0%, transparent 70%);
+}
+
+.portal-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
+}
+
+.portal-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.portal-edition {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.security-banner {
+  background: rgba(2, 132, 199, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--cyan-accent);
+  margin-bottom: 20px;
+}
+
+/* Alert Box */
+.alert-box {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #a7f3d0;
+}
+
+.d-none {
+  display: none !important;
+}
+
+/* Form Styles */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-container input {
+  width: 100%;
+  background: rgba(3, 10, 28, 0.8);
+  border: 1px solid var(--navy-border);
+  color: #ffffff;
+  padding: 12px 48px 12px 14px;
+  font-size: 0.92rem;
+  border-radius: 8px;
+  outline: none;
+  font-family: var(--font-main);
+  transition: all 0.2s ease;
+}
+
+.input-container input:focus {
+  border-color: var(--cyan-accent);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  background: rgba(7, 21, 54, 0.95);
+}
+
+.input-badge {
+  position: absolute;
+  right: 12px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  background: var(--navy-dark);
+  color: var(--cyan-accent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--navy-border);
+  pointer-events: none;
+}
+
+.toggle-pwd-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.toggle-pwd-btn:hover {
+  color: var(--cyan-accent);
+}
+
+.form-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: var(--cyan-accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+  color: #bae6fd;
+}
+
+/* Submit Button */
+.btn-login {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: 1px solid #38bdf8;
+  padding: 14px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4);
+}
+
+.btn-login:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-login:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Demo Profiles Section */
+.demo-profiles-section {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--navy-border);
+}
+
+.demo-divider {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.demo-divider span {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #fbbf24;
+  background: var(--navy-card);
+  padding: 2px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.demo-instructions {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.demo-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.demo-btn {
+  background: rgba(7, 21, 54, 0.7);
+  border: 1px solid var(--navy-border);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-primary);
+}
+
+.demo-btn:hover {
+  background: rgba(2, 132, 199, 0.2);
+  border-color: var(--cyan-accent);
+  transform: translateY(-2px);
+}
+
+.demo-btn-icon {
+  font-size: 1.1rem;
+  color: var(--cyan-accent);
+  margin-bottom: 4px;
+}
+
+.demo-btn-info strong {
+  display: block;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.demo-btn-info span {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Card Footer */
+.card-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-box {
+  background: var(--navy-dark);
+  border: 1px solid var(--navy-border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: rgba(3, 10, 28, 0.6);
+  border-bottom: 1px solid var(--navy-border);
+}
+
+.modal-header h3 {
+  font-size: 0.95rem;
+  color: var(--cyan-accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.info-callout {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(2, 132, 199, 0.1);
+  border-left: 3px solid var(--cyan-accent);
+  border-radius: 4px;
+}
+
+.info-callout strong {
+  color: #ffffff;
+}
+
+.info-callout a {
+  color: var(--cyan-accent);
+}
+
+.info-callout code {
+  background: var(--navy-darkest);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #fbbf24;
+  font-family: var(--font-mono);
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  background: rgba(3, 10, 28, 0.4);
+  border-top: 1px solid var(--navy-border);
+  text-align: right;
+}
+
+.btn-secondary {
+  background: var(--navy-card);
+  border: 1px solid var(--navy-border);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.btn-secondary:hover {
+  background: var(--navy-border);
+}
+
+@media (max-width: 580px) {
+  .demo-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}

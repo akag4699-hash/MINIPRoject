@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Powered Criminal Network Analysis System | SIH 2026</title>
+  
+  <!-- CSS Dependencies -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/vis-network/styles/vis-network.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/network.css">
+</head>
+<body>
+
+  <!-- Top Command Header -->
+  <header class="command-header">
+    <div class="header-left">
+      <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" title="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="header-brand">
+        <img src="assets/emblem.svg" alt="National Emblem of India" class="header-emblem">
+        <div class="header-titles">
+          <h1>AI-POWERED CRIMINAL NETWORK ANALYSIS SYSTEM</h1>
+          <p>NATIONAL LAW ENFORCEMENT COMMAND PORTAL &bull; SIH 2026</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="status-indicator" id="systemAiStatus">
+        <span class="status-dot pulse-green"></span> AI Engine: Operational
+      </div>
+      <div class="status-indicator" id="systemDbStatus">
+        <span class="status-dot pulse-cyan"></span> Supabase Connected
+      </div>
+      <div class="status-indicator">
+        <span class="status-dot pulse-red"></span> Threat Level: 3 (Elevated)
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button type="button" id="notificationsToggleBtn" class="header-btn" title="Intelligence Alerts">
+        <i class="fa-solid fa-bell"></i>
+        <span class="btn-badge" id="alertsCountBadge">4</span>
+      </button>
+
+      <div class="officer-profile-card" onclick="App.switchTab('settings')" title="View Officer Profile">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Officer Avatar" id="headerOfficerAvatar" class="officer-avatar">
+        <div class="officer-details">
+          <span class="officer-name" id="headerOfficerName">Inspector Rajesh Sharma</span>
+          <span class="officer-role" id="headerOfficerRole">Lead Investigating Officer</span>
+        </div>
+      </div>
+
+      <button type="button" class="header-btn btn-logout" title="Sign Out">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="command-sidebar">
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Core Operations</span>
+        <a class="nav-link active" data-tab="dashboard">
+          <i class="fa-solid fa-gauge-high"></i> Command Center
+        </a>
+        <a class="nav-link nav-link-ai" data-tab="analysis">
+          <i class="fa-solid fa-brain"></i> Upload &amp; AI Analysis
+          <span class="nav-pill">AI CORE</span>
+        </a>
+        <a class="nav-link" data-tab="network">
+          <i class="fa-solid fa-diagram-project"></i> Criminal Network
+        </a>
+
+        <span class="nav-section-label">Investigation Records</span>
+        <a class="nav-link" data-tab="firs">
+          <i class="fa-solid fa-file-shield"></i> FIR Management
+        </a>
+        <a class="nav-link" data-tab="cases">
+          <i class="fa-solid fa-briefcase"></i> Case Management
+        </a>
+        <a class="nav-link" data-tab="evidence">
+          <i class="fa-solid fa-vault"></i> Evidence Vault
+        </a>
+
+        <span class="nav-section-label">Intelligence &amp; Geospatial</span>
+        <a class="nav-link" data-tab="heatmap">
+          <i class="fa-solid fa-map-location-dot"></i> Crime Heat Map
+        </a>
+        <a class="nav-link" data-tab="performance">
+          <i class="fa-solid fa-chart-line"></i> Officer Performance
+        </a>
+        <a class="nav-link" data-tab="reports">
+          <i class="fa-solid fa-file-contract"></i> AI Reports
+        </a>
+
+        <span class="nav-section-label">System Control</span>
+        <a class="nav-link" data-tab="settings">
+          <i class="fa-solid fa-sliders"></i> Settings &amp; Audit Logs
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="footer-version">SIH 2026 &bull; v2.4.0</span>
+        <button type="button" class="btn-logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Viewport -->
+    <main class="main-viewport">
+
+      <!-- =========================================================================
+           TAB 1: MAIN DASHBOARD
+           ========================================================================= -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <!-- Welcome Banner -->
+        <div class="results-header-banner">
+          <div class="banner-left">
+            <h3><i class="fa-solid fa-shield-halved" style="color: #38bdf8;"></i> AI Intelligence Command Center</h3>
+            <p class="banner-meta">AI-Powered Criminal Network Analysis System &ndash; Smart India Hackathon (SIH) 2026</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-primary" onclick="App.switchTab('analysis')">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Upload Document for AI Analysis
+            </button>
+            <button class="btn-secondary" onclick="App.switchTab('network')">
+              <i class="fa-solid fa-diagram-project"></i> View Network Graph
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Cases</span>
+              <div class="kpi-icon kpi-icon-blue"><i class="fa-solid fa-briefcase"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiActiveCases">8</div>
+            <div class="kpi-subtext">Under active investigation</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Total FIRs</span>
+              <div class="kpi-icon kpi-icon-green"><i class="fa-solid fa-file-shield"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiTotalFIRs">10</div>
+            <div class="kpi-subtext">Registered across stations</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">High Priority Cases</span>
+              <div class="kpi-icon kpi-icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiHighPriority" style="color: #f87171;">6</div>
+            <div class="kpi-subtext">Immediate action required</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Suspects Identified</span>
+              <div class="kpi-icon kpi-icon-amber"><i class="fa-solid fa-user-secret"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiSuspects">14</div>
+            <div class="kpi-subtext">Indexed in graph intelligence</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Network Connections</span>
+              <div class="kpi-icon kpi-icon-cyan"><i class="fa-solid fa-circle-nodes"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiNetworkConnections">22</div>
+            <div class="kpi-subtext">Validated/Inferred linkages</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">AI Analyzed Cases</span>
+              <div class="kpi-icon kpi-icon-purple"><i class="fa-solid fa-brain"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiAIAnalyzed" style="color: #c084fc;">9</div>
+            <div class="kpi-subtext">NLP entity extraction run</div>
+          </div>
+        </div>
+
+        <!-- Crime Analytics Charts & Alerts -->
+        <div class="dashboard-analytics-grid">
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i> Monthly Crime Trends (Organized Syndicates)</h3>
+              <span class="format-tag">Oct 2025 &ndash; Mar 2026</span>
+            </div>
+            <div class="chart-container-fixed">
+              <canvas id="monthlyTrendsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-chart-pie" style="color: #8b5cf6;"></i> Crime Category Distribution</h3>
+            </div>
+            <div class="chart-container-fixed">
+              <canvas id="categoryDoughnutChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-analytics-grid">
+          <!-- AI Alerts Feed -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Real-Time AI Intelligence Alerts</h3>
+              <button class="btn-secondary" onclick="App.openModal('notificationsModal')" style="padding: 4px 10px; font-size: 0.72rem;">
+                View All Alerts
+              </button>
+            </div>
+            <div class="alerts-list" id="dashboardAlertsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Mini Criminal Network Overview -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-diagram-project" style="color: #38bdf8;"></i> Criminal Network Overview</h3>
+              <button class="btn-secondary" onclick="App.switchTab('network')" style="padding: 4px 10px; font-size: 0.72rem;">
+                Explore Graph
+              </button>
+            </div>
+            <div id="dashboardMiniNetwork" style="width: 100%; height: 260px; background: rgba(3, 10, 28, 0.7); border-radius: 8px;"></div>
+          </div>
+        </div>
+
+        <!-- Recent Cases Table -->
+        <div class="table-card">
+          <div class="card-title-bar" style="padding: 16px 20px; border-bottom: 1px solid var(--navy-border);">
+            <h3><i class="fa-solid fa-clock-rotate-left" style="color: #38bdf8;"></i> Recently Uploaded &amp; Analyzed Cases</h3>
+            <button class="btn-secondary" onclick="App.switchTab('cases')" style="padding: 4px 12px; font-size: 0.75rem;">
+              View All Cases
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Case ID</th>
+                  <th>Case Title</th>
+                  <th>Crime Category</th>
+                  <th>Assigned Officer</th>
+                  <th>Investigation Progress</th>
+                  <th>Priority</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardRecentCasesTbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Access Button Bar -->
+        <div class="sample-docs-bar">
+          <div class="sample-bar-label">
+            <i class="fa-solid fa-compass"></i> QUICK ACCESS MODULES:
+          </div>
+          <div class="sample-btn-group">
+            <button class="btn-sample" onclick="App.switchTab('firs')"><i class="fa-solid fa-file-shield"></i> FIRs</button>
+            <button class="btn-sample" onclick="App.switchTab('cases')"><i class="fa-solid fa-briefcase"></i> Cases</button>
+            <button class="btn-sample" onclick="App.switchTab('analysis')"><i class="fa-solid fa-brain"></i> AI Upload</button>
+            <button class="btn-sample" onclick="App.switchTab('network')"><i class="fa-solid fa-diagram-project"></i> Network Graph</button>
+            <button class="btn-sample" onclick="App.switchTab('evidence')"><i class="fa-solid fa-vault"></i> Evidence</button>
+            <button class="btn-sample" onclick="App.switchTab('heatmap')"><i class="fa-solid fa-map-location-dot"></i> Heat Map</button>
+            <button class="btn-sample" onclick="App.switchTab('performance')"><i class="fa-solid fa-chart-line"></i> Performance</button>
+            <button class="btn-sample" onclick="App.switchTab('reports')"><i class="fa-solid fa-file-contract"></i> Reports</button>
+            <button class="btn-sample" onclick="App.switchTab('settings')"><i class="fa-solid fa-sliders"></i> Settings</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 2: UPLOAD CASE & AI ANALYSIS (CORE FEATURE)
+           ========================================================================= -->
+      <section id="tab-analysis" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-brain" style="color: #38bdf8;"></i> Upload Investigation Document &amp; AI Analysis</h2>
+            <p>Upload FIRs, investigation reports, interrogation memos, or forensic evidence. The AI engine performs text extraction, Named Entity Recognition (NER), relationship mapping, and explainable priority scoring.</p>
+          </div>
+        </div>
+
+        <!-- 1-Click Sample Test Documents Bar (Judge Evaluation Ease) -->
+        <div class="sample-docs-bar">
+          <div class="sample-bar-label">
+            <i class="fa-solid fa-bolt-lightning"></i> 1-CLICK TEST CASE LOADERS (HACKATHON DEMO):
+          </div>
+          <div class="sample-btn-group">
+            <button type="button" class="btn-sample btn-load-sample" data-sample="extortion">
+              <i class="fa-solid fa-phone-slash"></i> Load Extortion FIR (Shadow-X Syndicate)
+            </button>
+            <button type="button" class="btn-sample btn-load-sample" data-sample="hawala">
+              <i class="fa-solid fa-money-bill-transfer"></i> Load Hawala &amp; Banking Mule Dossier
+            </button>
+            <button type="button" class="btn-sample btn-load-sample" data-sample="narcotics">
+              <i class="fa-solid fa-pills"></i> Load Darknet Narcotics Seizure Memo
+            </button>
+          </div>
+        </div>
+
+        <!-- Drag and Drop Upload Area -->
+        <div class="upload-dropzone" id="aiUploadDropzone">
+          <input type="file" id="aiFileInput" accept=".pdf,.docx,.txt,.jpg,.jpeg,.png" style="display: none;">
+          <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="upload-instructions">
+            <h3>Drag &amp; drop investigation document here, or browse files</h3>
+            <p>Supports official investigation documents, scans, and memos up to 30MB</p>
+          </div>
+          <div class="file-format-tags">
+            <span class="format-tag"><i class="fa-solid fa-file-pdf"></i> PDF</span>
+            <span class="format-tag"><i class="fa-solid fa-file-word"></i> DOCX</span>
+            <span class="format-tag"><i class="fa-solid fa-file-lines"></i> TXT</span>
+            <span class="format-tag"><i class="fa-solid fa-image"></i> JPG / PNG (OCR)</span>
+          </div>
+          <button type="button" id="browseFilesBtn" class="btn-primary" style="margin-top: 10px;">
+            <i class="fa-solid fa-folder-open"></i> Browse Official Document
+          </button>
+        </div>
+
+        <!-- Selected File Display Card -->
+        <div class="selected-file-card d-none" id="selectedFileCard">
+          <div class="file-info-group">
+            <div class="file-type-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+            <div class="file-name-meta">
+              <strong id="selectedFileName">FIR_Document.pdf</strong>
+              <span id="selectedFileSize">2.4 MB &bull; Validated format</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" id="removeSelectedFileBtn" class="btn-secondary" style="color: #f87171;">
+              <i class="fa-solid fa-xmark"></i> Remove
+            </button>
+            <button type="button" id="startAnalysisBtn" class="btn-primary">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Upload and Analyze with AI
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading Card -->
+        <div class="chart-card d-none" id="aiLoadingCard" style="text-align: center; padding: 40px;">
+          <i class="fa-solid fa-atom fa-spin" style="font-size: 3rem; color: #38bdf8; margin-bottom: 16px;"></i>
+          <h3 id="aiLoadingText">Extracting text &amp; executing Gemini AI analysis pipeline...</h3>
+          <p style="color: #94a3b8; font-size: 0.82rem; margin-top: 6px;">Performing Named Entity Recognition (NER), cross-referencing criminal nodes, and computing explainable priority index...</p>
+        </div>
+
+        <!-- AI Analysis Results Display -->
+        <div class="analysis-results-container d-none" id="aiResultsContainer">
+          <div class="results-header-banner">
+            <div class="banner-left">
+              <h3><i class="fa-solid fa-circle-check" style="color: #10b981;"></i> AI Analysis Results: <span id="analysisDocName">Document</span></h3>
+              <p class="banner-meta">Processed via <span id="analysisEngineBadge">Google Gemini 1.5</span> &bull; All AI findings flagged as unverified until reviewed by officer</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" id="btnViewAnalysisNetwork" class="btn-primary">
+                <i class="fa-solid fa-diagram-project"></i> View in Criminal Network
+              </button>
+              <button type="button" id="btnDownloadAnalysisReport" class="btn-secondary">
+                <i class="fa-solid fa-download"></i> Download Report
+              </button>
+            </div>
+          </div>
+
+          <div class="results-columns-grid">
+            <!-- A. Case Summary -->
+            <div class="chart-card">
+              <div class="card-title-bar">
+                <h3><i class="fa-solid fa-file-lines" style="color: #38bdf8;"></i> Section A: AI Case Summary</h3>
+                <span class="priority-pill pill-medium" id="analysisCategoryPill">Organized Crime</span>
+              </div>
+              <p id="analysisSummaryText" style="font-size: 0.85rem; line-height: 1.6; color: #f8fafc;">
+                Summary will appear here.
+              </p>
+              <div style="margin-top: 10px;">
+                <h4 style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px;">Key Observations:</h4>
+                <ul id="analysisKeyObservationsList" style="padding-left: 20px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5;">
+                  <!-- Observations -->
+                </ul>
+              </div>
+            </div>
+
+            <!-- D. Investigation Priority Score -->
+            <div class="priority-score-card">
+              <div class="card-title-bar">
+                <h3><i class="fa-solid fa-gauge-high" style="color: #ef4444;"></i> Section D: Investigation Priority Score</h3>
+                <span class="format-tag">Explainable Index</span>
+              </div>
+
+              <div class="score-display-center">
+                <div class="score-circle score-critical" id="analysisScoreCircle">
+                  <span class="score-number" id="analysisScoreNum">88</span>
+                  <span class="score-max">/ 100</span>
+                </div>
+                <div class="score-text-details">
+                  <h4 id="analysisPriorityLevel">Critical Priority</h4>
+                  <p id="analysisScoreExplanation">Analysis explanation...</p>
+                </div>
+              </div>
+
+              <div class="legal-disclaimer-callout">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <strong>LEGAL NOTICE:</strong> This score represents an investigation-priority triage indicator computed from complexity, flight risk, and public harm. It does not constitute proof of guilt or criminal activity.
+              </div>
+
+              <div>
+                <h4 style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 6px;">Contributing Risk Factors:</h4>
+                <div class="risk-factors-list" id="analysisRiskFactorsList">
+                  <!-- Risk factors -->
+                </div>
+              </div>
+
+              <div>
+                <h4 style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 6px;">Suggested Investigative Actions:</h4>
+                <ul id="analysisSuggestedActionsList" style="padding-left: 20px; color: #f8fafc;">
+                  <!-- Actions -->
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Entity Extraction -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-users-viewfinder" style="color: #38bdf8;"></i> Section B: Entity Extraction (Suspects, Phones, Bank Accounts, Vehicles, Locations)</h3>
+            </div>
+            <div class="entity-chips-cloud" id="analysisEntitiesCloud" style="margin-bottom: 16px;">
+              <!-- Entity chips -->
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Extracted Identifier</th>
+                    <th>Label / Context</th>
+                    <th>Confidence</th>
+                    <th>Risk Rating</th>
+                  </tr>
+                </thead>
+                <tbody id="analysisEntitiesTbody">
+                  <!-- Entities table -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- C. Relationship Extraction -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-circle-nodes" style="color: #8b5cf6;"></i> Section C: Relationship Extraction (Entity Linkages with Supporting Source Text)</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Source Entity</th>
+                    <th>Relationship</th>
+                    <th>Target Entity</th>
+                    <th>Confidence</th>
+                    <th>Supporting Source Text (Evidence)</th>
+                  </tr>
+                </thead>
+                <tbody id="analysisRelationshipsTbody">
+                  <!-- Relationships table -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- E. AI Recommendations -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-list-check" style="color: #10b981;"></i> Section E: AI Investigative Recommendations</h3>
+            </div>
+            <ul id="analysisRecommendationsList" style="list-style: none; padding: 0;">
+              <!-- Recommendations -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 3: CRIMINAL NETWORK ANALYSIS (VIS-NETWORK.JS)
+           ========================================================================= -->
+      <section id="tab-network" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-diagram-project" style="color: #38bdf8;"></i> Criminal Network Analysis</h2>
+            <p>Interactive graph topology mapping suspects, dummy corporate fronts, burner phone numbers, bank accounts, vehicles, and geo-landmarks.</p>
+          </div>
+          <div class="page-actions">
+            <span class="format-tag" id="networkStatsSummary">18 Entities &bull; 22 Links</span>
+          </div>
+        </div>
+
+        <div class="network-graph-wrapper">
+          <!-- Floating Controls Bar -->
+          <div class="network-controls-bar">
+            <div class="network-control-group">
+              <input type="text" id="netSearchInput" class="network-search-input" placeholder="Search suspect, phone, account...">
+              <select id="netEntityTypeFilter" class="network-select">
+                <option value="all">All Entity Types</option>
+                <option value="suspect">Suspects Only</option>
+                <option value="organization">Organizations</option>
+                <option value="phone">Phone Numbers</option>
+                <option value="bank_account">Bank Accounts</option>
+                <option value="vehicle">Vehicles</option>
+                <option value="location">Locations</option>
+              </select>
+              <select id="netCaseFilter" class="network-select">
+                <option value="">All Investigation Cases</option>
+              </select>
+            </div>
+
+            <div class="network-control-group">
+              <button type="button" id="netZoomInBtn" class="network-btn" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button type="button" id="netZoomOutBtn" class="network-btn" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+              <button type="button" id="netFitBtn" class="network-btn" title="Fit to Screen"><i class="fa-solid fa-expand"></i></button>
+              <button type="button" id="netPhysicsBtn" class="network-btn active" title="Toggle Force Physics"><i class="fa-solid fa-atom"></i></button>
+            </div>
+          </div>
+
+          <!-- Vis Network Canvas Container -->
+          <div id="visNetworkContainer" class="network-canvas"></div>
+
+          <!-- Color Legend -->
+          <div class="network-legend">
+            <div class="legend-item"><span class="legend-dot dot-suspect"></span> Suspect</div>
+            <div class="legend-item"><span class="legend-dot dot-org"></span> Organization</div>
+            <div class="legend-item"><span class="legend-dot dot-phone"></span> Phone</div>
+            <div class="legend-item"><span class="legend-dot dot-bank"></span> Bank Account</div>
+            <div class="legend-item"><span class="legend-dot dot-vehicle"></span> Vehicle</div>
+            <div class="legend-item"><span class="legend-dot dot-location"></span> Location</div>
+            <div class="legend-item" style="margin-left: 8px; border-left: 1px solid var(--navy-border); padding-left: 8px;">
+              <span style="border-bottom: 2px dashed #94a3b8; width: 14px; display: inline-block;"></span> Unverified Link
+            </div>
+          </div>
+
+          <!-- Slide-in Entity Inspector -->
+          <div class="entity-inspector-panel" id="entityInspectorPanel">
+            <div class="inspector-header">
+              <h4><i class="fa-solid fa-circle-info"></i> Entity Intelligence</h4>
+              <button type="button" id="inspectorCloseBtn" class="inspector-close-btn">&times;</button>
+            </div>
+            <div class="inspector-body">
+              <div class="inspector-title-area">
+                <span class="inspector-entity-type" id="inspEntityType">SUSPECT</span>
+                <h3 class="inspector-entity-name" id="inspEntityName">Sameer Sheikh</h3>
+              </div>
+
+              <!-- Verification status banner -->
+              <div class="verification-status-banner status-unverified" id="inspVerificationBanner">
+                <span>AI INFERRED (UNVERIFIED)</span>
+                <button type="button" id="btnVerifyEntityInInspector" class="btn-verify-action">
+                  <i class="fa-solid fa-check"></i> Verify as Officer
+                </button>
+              </div>
+
+              <!-- Confidence meter -->
+              <div class="inspector-confidence-meter">
+                <div class="confidence-header">
+                  <span>AI Extraction Confidence</span>
+                  <strong id="inspConfidenceNum">94%</strong>
+                </div>
+                <div class="confidence-bar-bg">
+                  <div class="confidence-bar-fill" id="inspConfidenceFill" style="width: 94%;"></div>
+                </div>
+              </div>
+
+              <!-- Metadata Grid -->
+              <div class="inspector-section-title">
+                <i class="fa-solid fa-table-list"></i> Investigative Metadata
+              </div>
+              <div class="inspector-metadata-grid" id="inspMetadataGrid">
+                <!-- Meta items -->
+              </div>
+
+              <!-- Connected relationships list -->
+              <div class="inspector-section-title">
+                <i class="fa-solid fa-link"></i> Direct Connections &amp; Evidence
+              </div>
+              <div class="connections-list" id="inspConnectionsList">
+                <!-- Connections -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 4: FIR MANAGEMENT
+           ========================================================================= -->
+      <section id="tab-firs" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-file-shield" style="color: #38bdf8;"></i> First Information Report (FIR) Management</h2>
+            <p>Register, query, update, and manage official FIR records in accordance with Indian Criminal Procedure.</p>
+          </div>
+          <div class="page-actions">
+            <span class="format-tag" id="firsCountBadge">10 Records Registered</span>
+            <button type="button" id="btnOpenRegisterFIRModal" class="btn-primary">
+              <i class="fa-solid fa-plus"></i> Register New FIR
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="sample-docs-bar">
+          <div class="network-control-group" style="box-shadow: none; padding: 0; background: none; border: none;">
+            <input type="text" id="firSearchInput" class="network-search-input" placeholder="Search by FIR #, complainant, location...">
+            <select id="firCategoryFilter" class="network-select">
+              <option value="All">All Crime Categories</option>
+              <option value="Extortion & Threats">Extortion &amp; Threats</option>
+              <option value="Cyber Financial Fraud">Cyber Financial Fraud</option>
+              <option value="Darknet Narcotics Distribution">Darknet Narcotics</option>
+              <option value="Corporate Espionage & Ransomware">Corporate Espionage</option>
+              <option value="Gold Smuggling & Hawala">Gold Smuggling &amp; Hawala</option>
+              <option value="Illegal Arms Trafficking">Illegal Arms Trafficking</option>
+              <option value="Armed Robbery & Gang Activity">Armed Robbery</option>
+            </select>
+            <select id="firStatusFilter" class="network-select">
+              <option value="All">All Statuses</option>
+              <option value="Registered">Registered</option>
+              <option value="Under Investigation">Under Investigation</option>
+              <option value="Chargesheet Filed">Chargesheet Filed</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- FIRs Table -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>FIR Number</th>
+                  <th>Complainant Name</th>
+                  <th>Crime Category</th>
+                  <th>Incident Location</th>
+                  <th>Date</th>
+                  <th>Investigating Officer</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="firsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 5: CASE MANAGEMENT
+           ========================================================================= -->
+      <section id="tab-cases" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-briefcase" style="color: #38bdf8;"></i> Investigation Case Management</h2>
+            <p>Establish investigation cases, assign officers, monitor milestones, connect FIR documents, and track progress.</p>
+          </div>
+          <div class="page-actions">
+            <span class="format-tag" id="casesCountBadge">8 Active Dossiers</span>
+            <button type="button" id="btnOpenCreateCaseModal" class="btn-primary">
+              <i class="fa-solid fa-plus"></i> Create Investigation Case
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="sample-docs-bar">
+          <div class="network-control-group" style="box-shadow: none; padding: 0; background: none; border: none;">
+            <input type="text" id="caseSearchInput" class="network-search-input" placeholder="Search case ID, title, officer...">
+            <select id="casePriorityFilter" class="network-select">
+              <option value="All">All Priorities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+            <select id="caseStatusFilter" class="network-select">
+              <option value="All">All Statuses</option>
+              <option value="Under Investigation">Under Investigation</option>
+              <option value="Active">Active</option>
+              <option value="Court Hearing">Court Hearing</option>
+              <option value="Solved">Solved</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cases Table -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Case ID</th>
+                  <th>Case Title</th>
+                  <th>Crime Type</th>
+                  <th>Suspects</th>
+                  <th>Assigned Officer</th>
+                  <th>Investigation Progress</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="casesTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 6: EVIDENCE VAULT
+           ========================================================================= -->
+      <section id="tab-evidence" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-vault" style="color: #38bdf8;"></i> Secure Evidence Vault &amp; Chain of Custody</h2>
+            <p>Deposit, inspect, and verify digital exhibits with cryptographic SHA-256 tamper-proof audit verification.</p>
+          </div>
+          <div class="page-actions">
+            <span class="format-tag" id="evidenceVaultBadge">5 Exhibits In Vault</span>
+            <button type="button" id="btnOpenDepositEvidenceModal" class="btn-primary">
+              <i class="fa-solid fa-upload"></i> Deposit Evidence Exhibit
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="sample-docs-bar">
+          <div class="network-control-group" style="box-shadow: none; padding: 0; background: none; border: none;">
+            <input type="text" id="evidenceSearchInput" class="network-search-input" placeholder="Search file name, exhibit #, case...">
+            <select id="evidenceCategoryFilter" class="network-select">
+              <option value="All">All Categories</option>
+              <option value="CCTV Footage">CCTV Footage</option>
+              <option value="Call Detail Records (CDR)">Call Detail Records (CDR)</option>
+              <option value="Bank Financial Audit">Bank Financial Audit</option>
+              <option value="Forensic Lab Report">Forensic Lab Report</option>
+              <option value="WhatsApp Chat Export">WhatsApp Chat Export</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Evidence Table -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Exhibit #</th>
+                  <th>Evidence File</th>
+                  <th>Category</th>
+                  <th>Associated Case</th>
+                  <th>Deposited By</th>
+                  <th>SHA-256 Hash</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="evidenceTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 7: CRIME HEAT MAP (LEAFLET.JS)
+           ========================================================================= -->
+      <section id="tab-heatmap" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-map-location-dot" style="color: #38bdf8;"></i> Geospatial Crime Heat Map &amp; Cluster Analysis</h2>
+            <p>Interactive geographical intelligence visualization of case incident coordinates and syndicate clusters across India.</p>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <select id="mapCategoryFilter" class="network-select">
+              <option value="All">All Crime Categories</option>
+              <option value="Extortion">Extortion &amp; Threats</option>
+              <option value="Cyber">Cyber Financial Fraud</option>
+              <option value="Narcotics">Narcotics Trafficking</option>
+              <option value="Arms">Arms Trafficking</option>
+            </select>
+            <select id="mapPriorityFilter" class="network-select">
+              <option value="All">All Priorities</option>
+              <option value="Critical">Critical Only</option>
+              <option value="High">High</option>
+            </select>
+            <select id="mapTileLayerSelect" class="network-select">
+              <option value="dark">Tactical Dark GIS</option>
+              <option value="osm">OpenStreetMap</option>
+            </select>
+            <button type="button" id="btnToggleHeatmapLayer" class="btn-primary" style="padding: 6px 12px; font-size: 0.75rem;">
+              <i class="fa-solid fa-fire-flame-curved"></i> Toggle Heat Layer
+            </button>
+            <button type="button" id="btnResetMapView" class="btn-secondary" style="padding: 6px 12px; font-size: 0.75rem;" title="Reset Camera to National View">
+              <i class="fa-solid fa-crosshairs"></i> Reset View
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard-analytics-grid">
+          <div class="chart-card" style="padding: 12px; height: 600px;">
+            <div id="leafletCrimeMap" style="width: 100%; height: 100%; border-radius: 8px;"></div>
+          </div>
+
+          <div class="chart-card" style="height: 600px; display: flex; flex-direction: column;">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-bullseye" style="color: #ef4444;"></i> High-Priority Incident Hotspots</h3>
+            </div>
+            <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 12px;">Click any hotspot to center and pan camera on map:</p>
+            <div class="risk-factors-list" id="mapHighPriorityList" style="overflow-y: auto; flex: 1;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 8: OFFICER PERFORMANCE
+           ========================================================================= -->
+      <section id="tab-performance" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i> Investigating Officer Workload &amp; Performance</h2>
+            <p>Transparent, objective law enforcement caseload and milestone analytics, free from opaque AI scoring biases.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-analytics-grid">
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-users" style="color: #38bdf8;"></i> Officer Caseload Breakdown</h3>
+            </div>
+            <div class="chart-container-fixed">
+              <canvas id="officerWorkloadChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-bullseye" style="color: #10b981;"></i> Department Clearance Index (%)</h3>
+            </div>
+            <div class="chart-container-fixed">
+              <canvas id="officerClosureRateChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-title-bar">
+            <h3><i class="fa-solid fa-arrow-trend-up" style="color: #38bdf8;"></i> Monthly Investigation Milestone Clearance (%)</h3>
+          </div>
+          <div class="chart-container-fixed">
+            <canvas id="monthlyClearanceChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 9: AI REPORTS
+           ========================================================================= -->
+      <section id="tab-reports" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-file-contract" style="color: #38bdf8;"></i> AI Intelligence Dossiers &amp; Reports</h2>
+            <p>Generate, archive, and export official case dossiers, syndicate briefings, and court-ready summaries.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" id="btnOpenGenerateReportModal" class="btn-primary">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Generate New AI Report
+            </button>
+          </div>
+        </div>
+
+        <div id="reportsListContainer">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 10: SETTINGS & AUDIT LOGS
+           ========================================================================= -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h2><i class="fa-solid fa-sliders" style="color: #38bdf8;"></i> Officer Profile &amp; System Configuration</h2>
+            <p>Manage credentials, review integration status with Supabase and Gemini, and inspect tamper-proof audit trails.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-analytics-grid">
+          <!-- Officer Profile -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-id-badge" style="color: #38bdf8;"></i> Officer Identity Record</h3>
+            </div>
+            <div class="inspector-metadata-grid">
+              <div class="meta-row"><span class="meta-key">Full Name:</span><span class="meta-val" id="settingsOfficerName">Inspector Rajesh Sharma</span></div>
+              <div class="meta-row"><span class="meta-key">Officer ID:</span><span class="meta-val" id="settingsOfficerId">IND-POL-8842</span></div>
+              <div class="meta-row"><span class="meta-key">Badge Number:</span><span class="meta-val" id="settingsOfficerBadge">DL-CB-4019</span></div>
+              <div class="meta-row"><span class="meta-key">Department:</span><span class="meta-val" id="settingsOfficerDept">Special Crime Branch</span></div>
+              <div class="meta-row"><span class="meta-key">Email:</span><span class="meta-val" id="settingsOfficerEmail">rajesh.sharma@police.gov.in</span></div>
+              <div class="meta-row"><span class="meta-key">Assigned Role:</span><span class="meta-val" id="settingsOfficerRole">lead_investigator</span></div>
+            </div>
+
+            <div style="margin-top: 14px; border-top: 1px dashed var(--navy-border); padding-top: 14px;">
+              <h4 style="font-size: 0.82rem; color: #ffffff; margin-bottom: 8px;">Change Security Password</h4>
+              <form id="changePasswordForm" style="display: flex; flex-direction: column; gap: 8px;">
+                <input type="password" id="newPasswordInput" class="network-search-input" style="width: 100%;" placeholder="New Password" required>
+                <input type="password" id="confirmPasswordInput" class="network-search-input" style="width: 100%;" placeholder="Confirm New Password" required>
+                <button type="submit" class="btn-primary" style="align-self: flex-start; padding: 6px 14px; font-size: 0.78rem;">
+                  Update Credentials
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- System Diagnostics -->
+          <div class="chart-card">
+            <div class="card-title-bar">
+              <h3><i class="fa-solid fa-server" style="color: #10b981;"></i> System Architecture &amp; Integration Diagnostics</h3>
+            </div>
+            <div class="inspector-metadata-grid">
+              <div class="meta-row"><span class="meta-key">Database Engine:</span><span class="meta-val" id="diagDatabaseMode">Supabase PostgreSQL</span></div>
+              <div class="meta-row"><span class="meta-key">AI NLP Engine:</span><span class="meta-val" id="diagGeminiStatus">Google Gemini 1.5 Flash</span></div>
+              <div class="meta-row"><span class="meta-key">System Uptime:</span><span class="meta-val" id="diagUptime">--</span></div>
+              <div class="meta-row"><span class="meta-key">Server Timestamp:</span><span class="meta-val" id="diagTimestamp">--</span></div>
+              <div class="meta-row"><span class="meta-key">Encryption Standard:</span><span class="meta-val">AES-256-GCM / SHA-256</span></div>
+              <div class="meta-row"><span class="meta-key">Hackathon Edition:</span><span class="meta-val" style="color: #fbbf24;">Smart India Hackathon 2026</span></div>
+            </div>
+
+            <div style="margin-top: 16px;">
+              <button type="button" id="btnSavePreferences" class="btn-secondary" style="width: 100%;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Local Preference Cache
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Logs Table -->
+        <div class="table-card">
+          <div class="card-title-bar" style="padding: 16px 20px; border-bottom: 1px solid var(--navy-border);">
+            <h3><i class="fa-solid fa-fingerprint" style="color: #38bdf8;"></i> Immutable Law Enforcement Audit Trail</h3>
+            <span class="format-tag">Recent 20 Operations</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Officer</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                  <th>Terminal IP</th>
+                </tr>
+              </thead>
+              <tbody id="auditLogsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODALS
+       ========================================================================= -->
+
+  <!-- Register FIR Modal -->
+  <div id="registerFIRModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-file-shield" style="color: #38bdf8;"></i> Register New FIR</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('registerFIRModal')">&times;</button>
+      </div>
+      <form id="registerFIRForm">
+        <div class="modal-content-body">
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>FIR Number</label>
+              <input type="text" id="formFirNumber" required>
+            </div>
+            <div class="custom-form-group">
+              <label>Crime Category</label>
+              <select id="formCrimeCategory" required>
+                <option value="Extortion & Threats">Extortion &amp; Threats</option>
+                <option value="Cyber Financial Fraud">Cyber Financial Fraud</option>
+                <option value="Darknet Narcotics Distribution">Darknet Narcotics</option>
+                <option value="Corporate Espionage & Ransomware">Corporate Espionage</option>
+                <option value="Gold Smuggling & Hawala">Gold Smuggling &amp; Hawala</option>
+                <option value="Illegal Arms Trafficking">Illegal Arms Trafficking</option>
+                <option value="Armed Robbery & Gang Activity">Armed Robbery</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Complainant Name</label>
+              <input type="text" id="formComplainantName" placeholder="Full name or Institution" required>
+            </div>
+            <div class="custom-form-group">
+              <label>Incident Date</label>
+              <input type="date" id="formIncidentDate" required>
+            </div>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Incident Location</label>
+            <input type="text" id="formIncidentLocation" placeholder="e.g. Sector 18, Cyber Hub, Gurugram" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Investigating Officer</label>
+              <input type="text" id="formInvestigatingOfficer" value="Inspector Rajesh Sharma">
+            </div>
+            <div class="custom-form-group">
+              <label>Initial Status</label>
+              <select id="formFirStatus">
+                <option value="Registered">Registered</option>
+                <option value="Under Investigation" selected>Under Investigation</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Priority Level</label>
+            <select id="formFirPriority">
+              <option value="Critical">Critical</option>
+              <option value="High" selected>High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Complaint &amp; Incident Description</label>
+            <textarea id="formFirDescription" rows="4" placeholder="Enter detailed factual statement of complaint..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('registerFIRModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Register FIR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View FIR Modal -->
+  <div id="viewFIRModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-file-shield" style="color: #38bdf8;"></i> FIR Record: <span id="viewFirNumber">--</span></h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('viewFIRModal')">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <div class="inspector-metadata-grid">
+          <div class="meta-row"><span class="meta-key">Category:</span><span class="meta-val" id="viewFirCategory">--</span></div>
+          <div class="meta-row"><span class="meta-key">Complainant:</span><span class="meta-val" id="viewFirComplainant">--</span></div>
+          <div class="meta-row"><span class="meta-key">Location:</span><span class="meta-val" id="viewFirLocation">--</span></div>
+          <div class="meta-row"><span class="meta-key">Incident Date:</span><span class="meta-val" id="viewFirDate">--</span></div>
+          <div class="meta-row"><span class="meta-key">Officer:</span><span class="meta-val" id="viewFirOfficer">--</span></div>
+          <div class="meta-row"><span class="meta-key">Status:</span><span class="meta-val" id="viewFirStatus">--</span></div>
+        </div>
+        <div style="margin-top: 10px;">
+          <h4 style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px;">Description:</h4>
+          <p id="viewFirDescription" style="font-size: 0.85rem; line-height: 1.5; color: #f8fafc;"></p>
+        </div>
+      </div>
+      <div class="modal-footer-bar">
+        <button type="button" class="btn-secondary" onclick="App.closeModal('viewFIRModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit FIR Modal -->
+  <div id="editFIRModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-pen-to-square" style="color: #38bdf8;"></i> Update FIR: <span id="editFirNumberDisplay">--</span></h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('editFIRModal')">&times;</button>
+      </div>
+      <form id="editFIRForm">
+        <input type="hidden" id="editFirId">
+        <div class="modal-content-body">
+          <div class="custom-form-group">
+            <label>Investigation Status</label>
+            <select id="editFirStatus">
+              <option value="Registered">Registered</option>
+              <option value="Under Investigation">Under Investigation</option>
+              <option value="Chargesheet Filed">Chargesheet Filed</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+          <div class="custom-form-group">
+            <label>Priority</label>
+            <select id="editFirPriority">
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="custom-form-group">
+            <label>Assigned Investigating Officer</label>
+            <input type="text" id="editFirOfficer">
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('editFIRModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Case Modal -->
+  <div id="createCaseModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-briefcase" style="color: #38bdf8;"></i> Establish Investigation Case</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('createCaseModal')">&times;</button>
+      </div>
+      <form id="createCaseForm">
+        <div class="modal-content-body">
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Case ID</label>
+              <input type="text" id="formCaseId" required>
+            </div>
+            <div class="custom-form-group">
+              <label>Crime Type</label>
+              <select id="formCaseCrimeType" required>
+                <option value="Extortion & Cyber Syndicate">Extortion &amp; Cyber Syndicate</option>
+                <option value="Cyber Financial Fraud">Cyber Financial Fraud</option>
+                <option value="Narcotics Trafficking">Narcotics Trafficking</option>
+                <option value="Gold Smuggling & Hawala">Gold Smuggling &amp; Hawala</option>
+                <option value="Illegal Arms Trafficking">Illegal Arms Trafficking</option>
+                <option value="Armed Robbery & Gang Activity">Armed Robbery &amp; Gang Activity</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Case Operation Title</label>
+            <input type="text" id="formCaseTitle" placeholder="e.g. Operation Shadow Web" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Location / Area</label>
+              <input type="text" id="formCaseLocation" placeholder="e.g. New Delhi & Gurugram" required>
+            </div>
+            <div class="custom-form-group">
+              <label>Assigned Lead Officer</label>
+              <input type="text" id="formCaseOfficer" value="Inspector Rajesh Sharma">
+            </div>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Connect Linked FIR</label>
+            <select id="formCaseFirNumber">
+              <option value="">-- Connect with Existing FIR (Optional) --</option>
+            </select>
+          </div>
+
+          <div class="form-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div class="custom-form-group">
+              <label>Priority</label>
+              <select id="formCasePriority">
+                <option value="Critical">Critical</option>
+                <option value="High" selected>High</option>
+                <option value="Medium">Medium</option>
+              </select>
+            </div>
+            <div class="custom-form-group">
+              <label>Initial Status</label>
+              <select id="formCaseStatus">
+                <option value="Under Investigation" selected>Under Investigation</option>
+                <option value="Active">Active</option>
+              </select>
+            </div>
+            <div class="custom-form-group">
+              <label>Progress (%)</label>
+              <input type="number" id="formCaseProgress" min="0" max="100" value="25">
+            </div>
+          </div>
+
+          <div class="custom-form-group">
+            <label>Case Scope &amp; Syndicate Overview</label>
+            <textarea id="formCaseDescription" rows="3" placeholder="Enter investigation scope and primary syndicate focus..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('createCaseModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Establish Case</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Case Modal -->
+  <div id="viewCaseModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-briefcase" style="color: #38bdf8;"></i> Case Dossier: <span id="viewCaseIdDisplay">--</span></h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('viewCaseModal')">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <h3 id="viewCaseTitle" style="color: #ffffff; font-size: 1.1rem; margin-bottom: 6px;">--</h3>
+        <div class="inspector-metadata-grid">
+          <div class="meta-row"><span class="meta-key">Crime Classification:</span><span class="meta-val" id="viewCaseCrimeType">--</span></div>
+          <div class="meta-row"><span class="meta-key">Operational Territory:</span><span class="meta-val" id="viewCaseLocation">--</span></div>
+          <div class="meta-row"><span class="meta-key">Assigned Officer:</span><span class="meta-val" id="viewCaseOfficer">--</span></div>
+          <div class="meta-row"><span class="meta-key">Status:</span><span class="meta-val" id="viewCaseStatus">--</span></div>
+          <div class="meta-row"><span class="meta-key">Investigation Progress:</span><span class="meta-val" id="viewCaseProgress">--</span></div>
+        </div>
+        <div style="margin-top: 10px;">
+          <h4 style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px;">Investigation Narrative:</h4>
+          <p id="viewCaseDescription" style="font-size: 0.85rem; line-height: 1.5; color: #f8fafc;"></p>
+        </div>
+        <div style="margin-top: 10px;">
+          <h4 style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px;">Connected Entities in Case:</h4>
+          <div class="entity-chips-cloud" id="viewCaseEntitiesList"></div>
+        </div>
+      </div>
+      <div class="modal-footer-bar">
+        <button type="button" class="btn-primary" onclick="App.switchTab('network'); App.closeModal('viewCaseModal');">
+          <i class="fa-solid fa-diagram-project"></i> Open in Network Graph
+        </button>
+        <button type="button" class="btn-secondary" onclick="App.closeModal('viewCaseModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Case Modal -->
+  <div id="editCaseModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-sliders" style="color: #38bdf8;"></i> Update Investigation Progress</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('editCaseModal')">&times;</button>
+      </div>
+      <form id="editCaseForm">
+        <input type="hidden" id="editCaseId">
+        <div class="modal-content-body">
+          <p id="editCaseTitleDisplay" style="font-weight: 700; color: #ffffff; margin-bottom: 10px;">--</p>
+          <div class="custom-form-group">
+            <label>Investigation Progress (%)</label>
+            <input type="number" id="editCaseProgress" min="0" max="100" required>
+          </div>
+          <div class="custom-form-group">
+            <label>Case Status</label>
+            <select id="editCaseStatus">
+              <option value="Under Investigation">Under Investigation</option>
+              <option value="Active">Active</option>
+              <option value="Court Hearing">Court Hearing</option>
+              <option value="Solved">Solved</option>
+            </select>
+          </div>
+          <div class="custom-form-group">
+            <label>Priority</label>
+            <select id="editCasePriority">
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('editCaseModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Update Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deposit Evidence Modal -->
+  <div id="depositEvidenceModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-vault" style="color: #38bdf8;"></i> Deposit Evidence Into Vault</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('depositEvidenceModal')">&times;</button>
+      </div>
+      <form id="depositEvidenceForm">
+        <div class="modal-content-body">
+          <div class="custom-form-group">
+            <label>Select Evidence File</label>
+            <input type="file" id="formEvidenceFile" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Evidence Category</label>
+              <select id="formEvidenceCategory" required>
+                <option value="CCTV Footage">CCTV Footage</option>
+                <option value="Call Detail Records (CDR)">Call Detail Records (CDR)</option>
+                <option value="Bank Financial Audit">Bank Financial Audit</option>
+                <option value="Forensic Lab Report">Forensic Lab Report</option>
+                <option value="WhatsApp Chat Export">WhatsApp Chat Export</option>
+                <option value="Vehicle Telematics">Vehicle Telematics</option>
+              </select>
+            </div>
+            <div class="custom-form-group">
+              <label>Associate with Case</label>
+              <select id="formEvidenceCase"></select>
+            </div>
+          </div>
+          <div class="custom-form-group">
+            <label>Evidence Description &amp; Source Details</label>
+            <textarea id="formEvidenceDescription" rows="3" placeholder="Chain of custody provenance, device serial, extraction method..."></textarea>
+          </div>
+          <div class="legal-disclaimer-callout">
+            <i class="fa-solid fa-lock"></i>
+            An immutable SHA-256 digital fingerprint will be automatically computed upon upload to guarantee chain-of-custody integrity for court admissibility.
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('depositEvidenceModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Deposit &amp; Hash Evidence</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Preview Evidence Modal -->
+  <div id="previewEvidenceModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-shield-check" style="color: #10b981;"></i> Evidence Exhibit Details</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('previewEvidenceModal')">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <div class="inspector-metadata-grid">
+          <div class="meta-row"><span class="meta-key">Exhibit #:</span><span class="meta-val" id="prevEvidenceNumber">--</span></div>
+          <div class="meta-row"><span class="meta-key">File Name:</span><span class="meta-val" id="prevEvidenceFileName">--</span></div>
+          <div class="meta-row"><span class="meta-key">Category:</span><span class="meta-val" id="prevEvidenceCategory">--</span></div>
+          <div class="meta-row"><span class="meta-key">Case Number:</span><span class="meta-val" id="prevEvidenceCase">--</span></div>
+          <div class="meta-row"><span class="meta-key">Deposited By:</span><span class="meta-val" id="prevEvidenceOfficer">--</span></div>
+        </div>
+
+        <div style="margin-top: 12px; background: rgba(3,10,28,0.8); border: 1px solid var(--navy-border); padding: 10px; border-radius: 6px;">
+          <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Cryptographic SHA-256 Hash (Chain of Custody):</span>
+          <p id="prevEvidenceHash" style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8; word-break: break-all; margin-top: 4px;"></p>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <h4 style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px;">Exhibit Description:</h4>
+          <p id="prevEvidenceDescription" style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;"></p>
+        </div>
+      </div>
+      <div class="modal-footer-bar">
+        <button type="button" class="btn-secondary" onclick="App.closeModal('previewEvidenceModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate AI Report Modal -->
+  <div id="generateReportModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: #38bdf8;"></i> Generate Law Enforcement Intelligence Dossier</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('generateReportModal')">&times;</button>
+      </div>
+      <form id="generateReportForm">
+        <div class="modal-content-body">
+          <div class="custom-form-group">
+            <label>Report Title</label>
+            <input type="text" id="reportTitleInput" placeholder="e.g. Operation Shadow Web - Comprehensive Syndicate Dossier" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="custom-form-group">
+              <label>Report Classification</label>
+              <select id="reportTypeSelect">
+                <option value="Criminal Syndicate Network Brief">Criminal Syndicate Network Brief</option>
+                <option value="Investigation Dossier">Investigation Dossier</option>
+                <option value="Case Summary">Case Summary</option>
+                <option value="Crime Trend Analysis">Crime Trend Analysis</option>
+              </select>
+            </div>
+            <div class="custom-form-group">
+              <label>Target Investigation Case</label>
+              <select id="reportTargetCase"></select>
+            </div>
+          </div>
+          <div class="custom-form-group">
+            <label>Specific Directives / Additional Officer Remarks</label>
+            <textarea id="reportNotesInput" rows="3" placeholder="Include specific inter-agency task force directives or court filing instructions..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer-bar">
+          <button type="button" class="btn-secondary" onclick="App.closeModal('generateReportModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Generate Dossier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View AI Report Modal -->
+  <div id="viewReportModal" class="modal-overlay d-none">
+    <div class="modal-dialog" style="max-width: 750px;">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-file-contract" style="color: #38bdf8;"></i> <span id="viewReportNumber">RPT-2026-0105</span></h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('viewReportModal')">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <h3 id="viewReportTitle" style="color: #ffffff; font-size: 1.15rem; margin-bottom: 6px;">--</h3>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 14px;">
+          Type: <strong id="viewReportType">--</strong> &bull; Author: <strong id="viewReportAuthor">--</strong> &bull; Date: <span id="viewReportDate">--</span>
+        </div>
+        <pre id="viewReportContent" style="white-space: pre-wrap; font-family: var(--font-mono); font-size: 0.78rem; background: rgba(3,10,28,0.9); padding: 16px; border-radius: 8px; border: 1px solid var(--navy-border); color: #cbd5e1; max-height: 50vh; overflow-y: auto; line-height: 1.6;"></pre>
+      </div>
+      <div class="modal-footer-bar">
+        <button type="button" class="btn-primary" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+        <button type="button" class="btn-secondary" onclick="App.closeModal('viewReportModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div id="notificationsModal" class="modal-overlay d-none">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <h3><i class="fa-solid fa-bell" style="color: #f59e0b;"></i> Real-Time AI Intelligence Alerts</h3>
+        <button type="button" class="close-modal" onclick="App.closeModal('notificationsModal')">&times;</button>
+      </div>
+      <div class="modal-content-body" id="notificationsModalList">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="modal-footer-bar">
+        <button type="button" class="btn-secondary" onclick="App.closeModal('notificationsModal')">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <!-- Application Modules -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/analysis.js"></script>
+  <script src="js/network.js"></script>
+  <script src="js/firs.js"></script>
+  <script src="js/cases.js"></script>
+  <script src="js/evidence.js"></script>
+  <script src="js/heatmap.js"></script>
+  <script src="js/performance.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/settings.js"></script>
+
+</body>
+</html>

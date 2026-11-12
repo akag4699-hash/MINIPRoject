@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Authentication | AI-Powered Criminal Network Analysis System - SIH 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <div class="network-bg-canvas" id="canvasContainer">
+    <canvas id="cyberCanvas"></canvas>
+  </div>
+
+  <div class="login-wrapper">
+    <!-- Top Government Header Banner -->
+    <div class="gov-top-bar">
+      <div class="emblem-container">
+        <img src="assets/emblem.svg" alt="National Emblem of India" class="national-emblem">
+      </div>
+      <div class="gov-text">
+        <span class="gov-sub">गृह मंत्रालय | MINISTRY OF HOME AFFAIRS</span>
+        <span class="gov-title">GOVERNMENT OF INDIA</span>
+        <span class="gov-security">RESTRICTED NATIONAL SECURITY CLEARANCE PORTAL</span>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <div class="logo-badge">
+          <img src="assets/logo.svg" alt="Criminal Network Analysis Logo" class="portal-logo">
+        </div>
+        <h1 class="portal-name">AI-POWERED CRIMINAL NETWORK ANALYSIS SYSTEM</h1>
+        <p class="portal-edition">Smart India Hackathon (SIH) 2026 &bull; Law Enforcement Intelligence Command</p>
+      </div>
+
+      <div class="security-banner">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>AUTHORISED LAW ENFORCEMENT ACCESS ONLY &bull; 256-BIT ENCRYPTED</span>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <div id="alertBox" class="alert-box d-none">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span id="alertMessage">Invalid Officer ID or Password.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="officerId">
+            <i class="fa-solid fa-id-badge"></i> Officer ID / Service Number
+          </label>
+          <div class="input-container">
+            <input 
+              type="text" 
+              id="officerId" 
+              name="officerId" 
+              placeholder="e.g. IND-POL-8842" 
+              value="IND-POL-8842" 
+              required 
+              autocomplete="username"
+            >
+            <span class="input-badge">POL-ID</span>
+          </div>
+          <small class="form-hint">Enter your allocated CCTNS / Central Police Force ID</small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fa-solid fa-key"></i> Security Credential / PIN
+          </label>
+          <div class="input-container">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="Enter secure password" 
+              value="Officer@2026" 
+              required 
+              autocomplete="current-password"
+            >
+            <button type="button" id="togglePasswordBtn" class="toggle-pwd-btn" title="Show / Hide Password">
+              <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <label class="remember-label">
+            <input type="checkbox" id="rememberMe" checked>
+            <span>Remember terminal session</span>
+          </label>
+          <a href="#" id="forgotPwdLink" class="forgot-link">Forgot Credentials?</a>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn-login">
+          <span class="btn-text">
+            <i class="fa-solid fa-fingerprint"></i> SECURE VERIFICATION &amp; LOGIN
+          </span>
+          <span class="btn-spinner d-none">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...
+          </span>
+        </button>
+      </form>
+
+      <!-- Quick Demo Profiles for SIH Judges -->
+      <div class="demo-profiles-section">
+        <div class="demo-divider">
+          <span>HACKATHON QUICK-ACCESS PROFILES</span>
+        </div>
+        <p class="demo-instructions">Click any officer profile to populate verified credentials instantly:</p>
+        <div class="demo-buttons-grid">
+          <button type="button" class="demo-btn" onclick="selectDemoOfficer('IND-POL-8842', 'Inspector Rajesh Sharma (Special Crime Branch)')">
+            <div class="demo-btn-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="demo-btn-info">
+              <strong>Inspector R. Sharma</strong>
+              <span>Special Crime Branch</span>
+            </div>
+          </button>
+          <button type="button" class="demo-btn" onclick="selectDemoOfficer('IND-POL-5521', 'ACP Sunita Verma (Cyber & Financial)')">
+            <div class="demo-btn-icon"><i class="fa-solid fa-building-shield"></i></div>
+            <div class="demo-btn-info">
+              <strong>ACP Sunita Verma</strong>
+              <span>Cyber &amp; Financial Cell</span>
+            </div>
+          </button>
+          <button type="button" class="demo-btn" onclick="selectDemoOfficer('IND-POL-9914', 'DSP Amit Deshmukh (Anti-Narcotics)')">
+            <div class="demo-btn-icon"><i class="fa-solid fa-shield-virus"></i></div>
+            <div class="demo-btn-info">
+              <strong>DSP Amit Deshmukh</strong>
+              <span>Anti-Narcotics Task Force</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <p class="disclaimer">
+          <i class="fa-solid fa-lock"></i> All sessions are actively monitored and logged into immutable audit registry in compliance with National Cyber Security Directives.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotModal" class="modal-backdrop d-none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-lock"></i> Officer Credential Recovery</h3>
+        <button type="button" class="close-modal" onclick="closeForgotModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>In accordance with Ministry Law Enforcement Protocols, credential resets require authorization from your Departmental IT Nodal Officer.</p>
+        <div class="info-callout">
+          <strong>Helpdesk Contact:</strong>
+          <p>Email: <a href="mailto:support@police.gov.in">support@police.gov.in</a></p>
+          <p>Command Helpdesk: 1800-11-CYBER (24x7 Emergency)</p>
+          <p>For Hackathon Demonstration: Use pre-filled officer ID <code>IND-POL-8842</code> and password <code>Officer@2026</code>.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeForgotModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Particle cyber background
+    const canvas = document.getElementById('cyberCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 65; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        radius: Math.random() * 2 + 1,
+        color: i % 3 === 0 ? '#38bdf8' : (i % 3 === 1 ? '#0284c7' : '#ef4444')
+      });
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      // Draw grid
+      ctx.strokeStyle = 'rgba(2, 132, 199, 0.05)';
+      ctx.lineWidth = 1;
+      const step = 60;
+      for (let x = 0; x < width; x += step) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += step) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.2 * (1 - dist / 130)})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Toggle password visibility
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePasswordBtn.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      eyeIcon.classList.toggle('fa-eye');
+      eyeIcon.classList.toggle('fa-eye-slash');
+    });
+
+    // Select Demo Officer
+    function selectDemoOfficer(id, name) {
+      document.getElementById('officerId').value = id;
+      document.getElementById('password').value = 'Officer@2026';
+      const alertBox = document.getElementById('alertBox');
+      alertBox.className = 'alert-box alert-success';
+      alertBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> Selected: ${name}. Ready to login.`;
+      alertBox.classList.remove('d-none');
+    }
+
+    // Modal handlers
+    const forgotModal = document.getElementById('forgotModal');
+    document.getElementById('forgotPwdLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotModal.classList.remove('d-none');
+    });
+    function closeForgotModal() {
+      forgotModal.classList.add('d-none');
+    }
+
+    // Form submit
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const btnText = loginBtn.querySelector('.btn-text');
+    const btnSpinner = loginBtn.querySelector('.btn-spinner');
+    const alertBox = document.getElementById('alertBox');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const officerId = document.getElementById('officerId').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      alertBox.classList.add('d-none');
+      btnText.classList.add('d-none');
+      btnSpinner.classList.remove('d-none');
+      loginBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ officerId, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          localStorage.setItem('cna_token', data.token);
+          localStorage.setItem('cna_officer', JSON.stringify(data.officer));
+          
+          alertBox.className = 'alert-box alert-success';
+          alertBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> Clearance verified. Redirecting to Command Center...`;
+          alertBox.classList.remove('d-none');
+
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 600);
+        } else {
+          throw new Error(data.message || 'Authentication failed. Please verify credentials.');
+        }
+      } catch (err) {
+        alertBox.className = 'alert-box alert-error';
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${err.message}`;
+        alertBox.classList.remove('d-none');
+      } finally {
+        btnText.classList.remove('d-none');
+        btnSpinner.classList.add('d-none');
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

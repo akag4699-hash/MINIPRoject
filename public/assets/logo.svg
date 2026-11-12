@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="glowRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Hexagonal Security Shield -->
+  <polygon points="100,10 185,45 185,130 100,190 15,130 15,45" fill="#03112c" stroke="url(#neonCyan)" stroke-width="3" filter="url(#glow)"/>
+  <polygon points="100,20 172,50 172,124 100,175 28,124 28,50" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- Network Graph Constellation Nodes inside shield -->
+  <!-- Center Core AI Node -->
+  <circle cx="100" cy="95" r="14" fill="#0284c7" stroke="#38bdf8" stroke-width="2.5" filter="url(#glow)"/>
+  <circle cx="100" cy="95" r="6" fill="#ffffff"/>
+
+  <!-- Connected Nodes -->
+  <!-- Suspect Red Node -->
+  <circle cx="60" cy="65" r="9" fill="url(#glowRed)" stroke="#fca5a5" stroke-width="1.5"/>
+  <!-- Phone Purple Node -->
+  <circle cx="140" cy="65" r="8" fill="#8b5cf6" stroke="#c4b5fd" stroke-width="1.5"/>
+  <!-- Bank Account Emerald Node -->
+  <circle cx="50" cy="125" r="8" fill="#10b981" stroke="#a7f3d0" stroke-width="1.5"/>
+  <!-- Vehicle Cyan Node -->
+  <circle cx="150" cy="125" r="8" fill="#06b6d4" stroke="#a5f3fc" stroke-width="1.5"/>
+  <!-- Location Amber Node -->
+  <circle cx="100" cy="150" r="7" fill="#f59e0b" stroke="#fde68a" stroke-width="1.5"/>
+
+  <!-- Network Interconnection Edges -->
+  <line x1="100" y1="95" x2="60" y2="65" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+  <line x1="100" y1="95" x2="140" y2="65" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+  <line x1="100" y1="95" x2="50" y2="125" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+  <line x1="100" y1="95" x2="150" y2="125" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+  <line x1="100" y1="95" x2="100" y2="150" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+
+  <!-- Cross-link Edges -->
+  <line x1="60" y1="65" x2="50" y2="125" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2" stroke-opacity="0.7"/>
+  <line x1="140" y1="65" x2="150" y2="125" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3,2" stroke-opacity="0.7"/>
+  <line x1="50" y1="125" x2="100" y2="150" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.6"/>
+
+  <!-- Radar Sweep Arc Effect -->
+  <path d="M100,55 A40,40 0 0,1 140,95" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+</svg>

@@ -1,0 +1,10 @@
+FINANCIAL CRIMES ENFORCEMENT DOSSIER
+ECONOMIC OFFENCES WING - SPECIAL INVESTIGATION UNIT
+CASE REFERENCE: ML-2026-BKC-094
+SUBJECT ENTITY: Titan Logistics Pvt Ltd (CIN: U63090HR2023PTC099124)
+TARGET SUSPECTS: Nikhil Joshi (Mule Coordinator), Farooq Choksi (Hawala Conduit), Pooja Hegde alias Maya
+
+FINANCIAL INTELLIGENCE SUMMARY:
+Between 20-02-2026 and 24-02-2026, automated monitoring detected 36 high-velocity fund transfers through HDFC Bank Account 009182390112 totaling INR 14.8 Crores. Accounts were opened using forged KYC credentials by operative Nikhil Joshi using mobile number +91-98201-44789.
+CCTV footage from BKC Financial Enclave ATM captures suspect Nikhil Joshi withdrawing bulk tranches. Funds were layered into dummy account SBI-33049182001 and converted into USDT by crypto mixer operator Pooja Hegde alias Maya. Corporate entity Titan Logistics serves as commercial transport facade for cash distribution.
+Immediate action: Issue freezing notices under Section 102 Cr.P.C. to correspondent banking branches.
