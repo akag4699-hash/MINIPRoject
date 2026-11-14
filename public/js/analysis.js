@@ -10,6 +10,12 @@ const AnalysisModule = {
     this.setupDropzone();
     this.setupSampleButtons();
     this.setupActions();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const sample = urlParams.get('sample');
+    if (sample) {
+      setTimeout(() => this.executeSampleAnalysis(sample), 600);
+    }
   },
 
   setupDropzone() {

@@ -7,8 +7,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const uploadsDir = path.join(__dirname, '..', 'storage', 'uploads');
-const evidenceDir = path.join(__dirname, '..', 'storage', 'evidence');
+// const uploadsDir = path.join(__dirname, '..', 'storage', 'uploads');
+// const evidenceDir = path.join(__dirname, '..', 'storage', 'evidence');
+const uploadsDir = '/tmp/miniproject-storage/uploads';
+const evidenceDir = '/tmp/miniproject-storage/evidence';
 
 // Ensure storage directories exist
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });

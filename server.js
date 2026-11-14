@@ -20,7 +20,7 @@ const reportsRoutes = require('./src/routes/reports');
 const auditRoutes = require('./src/routes/audit');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -29,7 +29,8 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Static file hosting for Frontend UI and uploaded storage
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/storage', express.static(path.join(__dirname, 'src', 'storage')));
+app.use('/storage', express.static('/tmp/miniproject-storage'));
+// app.use('/storage', express.static(path.join(__dirname, 'src', 'storage')));
 
 // Mount API Routes
 app.use('/api/auth', authRoutes);
@@ -43,8 +44,10 @@ app.use('/api/reports', reportsRoutes);
 app.use('/api', auditRoutes);
 
 // Ensure storage directories exist
-const uploadsDir = path.join(__dirname, 'src', 'storage', 'uploads');
-const evidenceDir = path.join(__dirname, 'src', 'storage', 'evidence');
+// const uploadsDir = path.join(__dirname, 'src', 'storage', 'uploads');
+// const evidenceDir = path.join(__dirname, 'src', 'storage', 'evidence');
+const uploadsDir = '/tmp/miniproject-storage/uploads';
+const evidenceDir = '/tmp/miniproject-storage/evidence';
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 if (!fs.existsSync(evidenceDir)) fs.mkdirSync(evidenceDir, { recursive: true });
 
@@ -70,30 +73,31 @@ app.use((err, req, res, next) => {
   });
 });
 
-const startServer = (portToTry) => {
-  const server = app.listen(portToTry, () => {
-    console.log('========================================================================');
-    console.log('  AI-POWERED CRIMINAL NETWORK ANALYSIS SYSTEM');
-    console.log('  Smart India Hackathon (SIH) 2026 - Law Enforcement Intelligence Portal');
-    console.log('========================================================================');
-    console.log(`  > Command Center Portal : http://localhost:${portToTry}`);
-    console.log(`  > Officer Login Page    : http://localhost:${portToTry}/login.html`);
-    console.log(`  > Environment           : ${process.env.NODE_ENV || 'development'}`);
-    console.log(`  > Storage Engine        : ${process.env.SUPABASE_URL ? 'Supabase PostgreSQL' : 'Local Resilient Engine (Demo Mode)'}`);
-    console.log(`  > AI Engine             : ${process.env.GEMINI_API_KEY ? 'Google Gemini 1.5' : 'Local NLP & Extraction Engine'}`);
-    console.log('========================================================================');
-  });
+// const startServer = (portToTry) => {
+//   const server = app.listen(portToTry, () => {
+//     console.log('========================================================================');
+//     console.log('  AI-POWERED CRIMINAL NETWORK ANALYSIS SYSTEM');
+//     console.log('  Smart India Hackathon (SIH) 2026 - Law Enforcement Intelligence Portal');
+//     console.log('========================================================================');
+//     // console.log(`  > Command Center Portal : http://localhost:${portToTry}`);
+//     console.log(`  > Officer Login Page    : http://localhost:${portToTry}/login.html`);
+//     console.log(`  > Environment           : ${process.env.NODE_ENV || 'development'}`);
+//     console.log(`  > Storage Engine        : ${process.env.SUPABASE_URL ? 'Supabase PostgreSQL' : 'Local Resilient Engine (Demo Mode)'}`);
+//     console.log(`  > AI Engine             : ${process.env.GEMINI_API_KEY ? 'Google Gemini 1.5' : 'Local NLP & Extraction Engine'}`);
+//     console.log('========================================================================');
+//   });
 
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      const nextPort = Number(portToTry) + 1;
-      console.warn(`[PORT CONFLICT] Port ${portToTry} is already in use by another instance.`);
-      console.log(`[PORT FALLBACK] Automatically switching to next available port: ${nextPort}...`);
-      startServer(nextPort);
-    } else {
-      console.error('[SERVER ERROR]', err);
-    }
-  });
-};
+//   server.on('error', (err) => {
+//     if (err.code === 'EADDRINUSE') {
+//       const nextPort = Number(portToTry) + 1;
+//       console.warn(`[PORT CONFLICT] Port ${portToTry} is already in use by another instance.`);
+//       console.log(`[PORT FALLBACK] Automatically switching to next available port: ${nextPort}...`);
+//       startServer(nextPort);
+//     } else {
+//       console.error('[SERVER ERROR]', err);
+//     }
+//   });
+// };
 
-startServer(PORT);
+// startServer(PORT);
+module.exports = app;
